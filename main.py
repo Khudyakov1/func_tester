@@ -4,6 +4,9 @@ import style_check
 from pathlib import Path
 
 ADDRESS_STYLE = 'PARENT' # 'PARENT' / 'CURRENT' / 'ABSOLUTE'
+APP_NAME = 'app'
+FILE_NAME = 'main.c'
+
 
 directory = ''
 
@@ -25,6 +28,6 @@ elif ADDRESS_STYLE == 'ABSOLUTE':
         directory += '/'
 
 if directory != '':
-    build.build('main.c', 'app', directory=directory)
-    run_tests.run('main.c', 'app', directory=directory)
-    style_check.check('main.c', directory=directory)
+    build.build(FILE_NAME, APP_NAME, directory=directory)
+    run_tests.run(FILE_NAME, APP_NAME, directory=directory)
+    style_check.check(FILE_NAME', directory=directory)
