@@ -35,22 +35,25 @@ run_tests.run(FILE_NAME, APP_NAME, directory=directory, positive_test_mask='pos_
 
 # Пример работы
 ```
-Input folder name: lab_03_04_00
+Input folder name: lab_03_05_00
 Build successful
 
 Positive testing unsuccessful
-Testpos_03_in.txt has failed:
+Test pos_04_in.txt has failed:
   Expected result  | Recieved_result 
-* 102              | 101             
+  678 21 9 12      | 678 21 9 12     
+  58 12 34 161     | 58 12 34 161    
+  12 34 3 3        | 12 34 3 3       
+* 123 34 1 6       | 123 34 1 5      
 
 Negative testing successful
 
 Coverage:
 File 'main.c'
-Lines executed:100.00% of 37
+Lines executed:100.00% of 70
 Creating 'main.c.gcov'
 
 Style check:
-/.../lab_03_04_00/main.c(20,12): Incorrect lexema's first symbol register (is upper, but expected is lower)
-/.../lab_03_04_00/main.c(20,12): Incorrect register of lexema, (upper, but expected lower)
+/home/.../lab_03_05_00/main.c(21,12): Incorrect lexema's first symbol register (is upper, but expected is lower)
+/home/.../lab_03_05_00/main.c(21,12): Incorrect register of lexema, (upper, but expected lower)
 ``` 

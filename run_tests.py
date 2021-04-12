@@ -1,4 +1,5 @@
 import os
+from termcolor import colored
 
 def leave_numbers(string):
     numbers = ['0','1','2','3','4','5','6','7','8','9','.''-',' ']
@@ -40,9 +41,9 @@ def run(file_name, app_name, directory='.', tests_folder='func_tests', positive_
 
             if recieved_data != expected_data:
                 if tests_passed:
-                    print('Positive testing unsuccessful')
+                    print(colored('Positive testing unsuccessful', 'red'))
                     tests_passed = False
-                print('Test' + input_file_name + ' has failed:')
+                print('Test ' + input_file_name + ' has failed:')
                 lines = max(len(recieved_data), len(expected_data))
                 for i in range(lines - len(recieved_data)):
                     recieved_data.append('')
@@ -64,7 +65,7 @@ def run(file_name, app_name, directory='.', tests_folder='func_tests', positive_
         except FileNotFoundError:
             break
     if tests_passed:
-        print('Positive testing successful')
+        print(colored('Positive testing successful', 'green'))
     print()
     tests_passed = True
     for i in range(1,100):
@@ -74,17 +75,17 @@ def run(file_name, app_name, directory='.', tests_folder='func_tests', positive_
             cmd = '"' + directory + '/' + app_name + '" < "' + directory + '/' + tests_folder + '/' + input_file_name + '" > tmp.txt'
             if os.WEXITSTATUS(os.system(cmd)) == 0:
                 if tests_passed:
-                    print('Negative testing unsuccessful')
+                    print(colored('Negative testing unsuccessful', 'red'))
                 tests_passed = False
                 print('Test ' + input_file_name + ' has failed')
         except FileNotFoundError:
             break
     
     if tests_passed:
-        print('Negative testing successful')
+        print(colored('Negative testing successful', 'green'))
     print()
     cmd = 'rm "' + directory + '"/tmp.txt' + '"'
-    print("Coverage:")
+    print(colored('Coverage:', 'blue'))
     file_name = file_name[:-2]
     cmd = 'gcov "' + directory + '/' + file_name + '.gcda"' 
     os.system(cmd)
