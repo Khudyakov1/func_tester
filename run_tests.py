@@ -2,10 +2,10 @@ import os
 from termcolor import colored
 
 def leave_numbers(string):
-    numbers = ['0','1','2','3','4','5','6','7','8','9','.''-',' ']
+    numbers = ['0','1','2','3','4','5','6','7','8','9','-',' ']
     result = ''
     for k in string:
-        if k in numbers:
+        if k in numbers or k == '.':
             result += k
     while result.find('  ') != -1:
         result = result.replace('  ',' ')
@@ -32,7 +32,12 @@ def run(directory='.', settings = {}):
                 else:
                     if line != '':
                         expected_data.append(leave_numbers(line))
-            cmd = '"' + directory + '/' + settings['app_name'] + '" < "' + directory + '/' + settings['tests_folder'] + '/' + input_file_name + '" > tmp.txt'
+            arguments = settings['arguments'].replace('$IN_FILE$', directory + '/' + settings['tests_folder'] + '/' + input_file_name).replace('$OUT_FILE$', 'tmp.txt')
+            cmd = '"' + directory + '/' + settings['app_name'] + '" ' + arguments + ' '
+            if settings['use_input_file']:
+                cmd += '" < "' + directory + '/' + settings['tests_folder'] + '/' + input_file_name + '"'
+            if settings['use_output_file']:
+                cmd += '> tmp.txt'
             os.system(cmd)
             recieved_data = []
             recieved_data_file = open(directory + '/tmp.txt')
@@ -82,7 +87,12 @@ def run(directory='.', settings = {}):
         try:
             input_file_name = settings['negative_test_mask'].replace('*', '{:02d}'.format(i),1).replace('*', 'in')
             open(directory + '/' + settings['tests_folder'] + '/' + input_file_name)
-            cmd = '"' + directory + '/' + settings['app_name'] + '" < "' + directory + '/' + settings['tests_folder'] + '/' + input_file_name + '" > tmp.txt'
+            arguments = settings['arguments'].replace('$IN_FILE$', directory + '/' + settings['tests_folder'] + '/' + input_file_name).replace('$OUT_FILE$', 'tmp.txt')
+            cmd = '"' + directory + '/' + settings['app_name'] + '" ' + arguments + ' '
+            if settings['use_input_file']:
+                cmd += '" < "' + directory + '/' + settings['tests_folder'] + '/' + input_file_name + '"'
+            if settings['use_output_file']:
+                cmd += '> tmp.txt'
             if os.WEXITSTATUS(os.system(cmd)) == 0:
                 if tests_passed:
                     print(colored('Negative testing unsuccessful', 'red'))

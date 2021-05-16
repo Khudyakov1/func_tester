@@ -21,7 +21,9 @@ DEFAULT_SETTINGS = {
     'tests_folder': 'func_tests',
     'positive_test_mask': 'pos_*_*.txt',
     'negative_test_mask': 'neg_*_*.txt',
-
+    'use_input_file': True,
+    'use_output_file': True,
+    'arguments': '$IN_FILE$'
 }
 
 directory = ''
