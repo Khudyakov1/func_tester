@@ -1,7 +1,8 @@
 import os
 from termcolor import colored
 
-def check(app_name, directory='.'):
+def check(files, directory='.'):
     print(colored('Style check:', 'blue'))
-    cmd = './CodeChecker.exe --rules "' + os.getcwd() + '/Rules.txt" "' + directory + app_name + '"'
-    os.system(cmd)
+    for file in files:
+        cmd = './CodeChecker.exe --rules "' + os.getcwd() + '/Rules.txt" "' + directory + file + '"'
+        os.system(cmd)

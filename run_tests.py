@@ -12,32 +12,42 @@ def leave_numbers(string):
     result = result.strip()
     return result
 
-def run(file_name, app_name, directory='.', tests_folder='func_tests', positive_test_mask='pos_*_*.txt', negative_test_mask='neg_*_*.txt'):
+def run(directory='.', settings = {}):
     tests_passed = True
     prev_directory = os.getcwd()
     if directory != '.':
         os.chdir(directory)
     directory = os.getcwd()
-    cmd = 'rm "' + directory + '"/*.gcda '
+    cmd = 'rm "' + directory + '"/*.gcda -f'
     os.system(cmd)
     for i in range(1,100):
         try:
-
             expected_data = []
-            output_file_name = positive_test_mask.replace('*', '{:02d}'.format(i),1).replace('*', 'out')
-            input_file_name = positive_test_mask.replace('*', '{:02d}'.format(i),1).replace('*', 'in')
-            expected_output_file = open(directory + '/' + tests_folder + '/' + output_file_name)
+            output_file_name = settings['positive_test_mask'].replace('*', '{:02d}'.format(i),1).replace('*', 'out')
+            input_file_name = settings['positive_test_mask'].replace('*', '{:02d}'.format(i),1).replace('*', 'in')
+            expected_output_file = open(directory + '/' + settings['tests_folder'] + '/' + output_file_name)
             for line in expected_output_file:
-                if line != '':
-                    expected_data.append(leave_numbers(line))
-            cmd = '"' + directory + '/' + app_name + '" < "' + directory + '/' + tests_folder + '/' + input_file_name + '" > tmp.txt'
+                if settings['strict_string']:
+                    expected_data.append(line.replace('\n',''))
+                else:
+                    if line != '':
+                        expected_data.append(leave_numbers(line))
+            cmd = '"' + directory + '/' + settings['app_name'] + '" < "' + directory + '/' + settings['tests_folder'] + '/' + input_file_name + '" > tmp.txt'
             os.system(cmd)
             recieved_data = []
             recieved_data_file = open(directory + '/tmp.txt')
 
+            reading_result = False
             for line in recieved_data_file:
-                if leave_numbers(line) != '':
-                    recieved_data.append(leave_numbers(line))
+                if settings['strict_string']:
+                    if line.find(settings['result_word']) != -1:
+                        reading_result = True
+                        line = line[line.find(settings['result_word']):]
+                    if reading_result:
+                        recieved_data.append(line.replace('\n',''))
+                else:
+                    if leave_numbers(line) != '':
+                        recieved_data.append(leave_numbers(line))
 
             if recieved_data != expected_data:
                 if tests_passed:
@@ -70,9 +80,9 @@ def run(file_name, app_name, directory='.', tests_folder='func_tests', positive_
     tests_passed = True
     for i in range(1,100):
         try:
-            input_file_name = negative_test_mask.replace('*', '{:02d}'.format(i),1).replace('*', 'in')
-            open(directory + '/' + tests_folder + '/' + input_file_name)
-            cmd = '"' + directory + '/' + app_name + '" < "' + directory + '/' + tests_folder + '/' + input_file_name + '" > tmp.txt'
+            input_file_name = settings['negative_test_mask'].replace('*', '{:02d}'.format(i),1).replace('*', 'in')
+            open(directory + '/' + settings['tests_folder'] + '/' + input_file_name)
+            cmd = '"' + directory + '/' + settings['app_name'] + '" < "' + directory + '/' + settings['tests_folder'] + '/' + input_file_name + '" > tmp.txt'
             if os.WEXITSTATUS(os.system(cmd)) == 0:
                 if tests_passed:
                     print(colored('Negative testing unsuccessful', 'red'))
@@ -83,10 +93,11 @@ def run(file_name, app_name, directory='.', tests_folder='func_tests', positive_
     
     if tests_passed:
         print(colored('Negative testing successful', 'green'))
-    print()
-    cmd = 'rm "' + directory + '"/tmp.txt' + '"'
-    print(colored('Coverage:', 'blue'))
-    file_name = file_name[:-2]
-    cmd = 'gcov "' + directory + '/' + file_name + '.gcda"' 
-    os.system(cmd)
+    if settings['coverage']:
+        print(colored('Coverage:', 'blue'))
+        for root, dirs, files in os.walk('.'):
+            for file in files:
+                if file.endswith(".gcno"):
+                    cmd = 'gcov "' + directory + '/' + file + '"'
+                    os.system(cmd)
     os.chdir(prev_directory)

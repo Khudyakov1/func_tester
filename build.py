@@ -1,12 +1,14 @@
 import os
 from termcolor import colored
 
-def build(file_name, app_name, directory='.', flags='-Wall -Werror -Wextra -Wpedantic -Wvla -Wfloat-equal -Wfloat-conversion --coverage -lm', compiler='gcc'):
+def build(to_include, directory='.', settings = {'flags': '', 'compiler': 'gcc'}):
     prev_directory = os.getcwd()
     if directory != '.':
         os.chdir(directory)
-    cmd = compiler + ' ' + file_name + ' -o ' + app_name + ' ' + flags
-    #os.system(cmd)
+    cmd = settings['compiler'] + ' ' 
+    for file in to_include:
+        cmd += file + ' '
+    cmd += ' -o' + settings['app_name'] + ' ' + settings['flags']
     rc = os.WEXITSTATUS(os.system(cmd))
     os.chdir(prev_directory)
     if not rc:
