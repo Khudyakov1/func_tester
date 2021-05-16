@@ -32,10 +32,10 @@ def run(directory='.', settings = {}):
                 else:
                     if line != '':
                         expected_data.append(leave_numbers(line))
-            arguments = settings['arguments'].replace('$IN_FILE$', directory + '/' + settings['tests_folder'] + '/' + input_file_name).replace('$OUT_FILE$', 'tmp.txt')
+            arguments = settings['arguments'].replace('$IN_FILE$', '"' + directory + '/' + settings['tests_folder'] + '/' + input_file_name + '"').replace('$OUT_FILE$', 'tmp.txt')
             cmd = '"' + directory + '/' + settings['app_name'] + '" ' + arguments + ' '
             if settings['use_input_file']:
-                cmd += '" < "' + directory + '/' + settings['tests_folder'] + '/' + input_file_name + '"'
+                cmd += ' < "' + directory + '/' + settings['tests_folder'] + '/' + input_file_name + '"'
             if settings['use_output_file']:
                 cmd += '> tmp.txt'
             os.system(cmd)
