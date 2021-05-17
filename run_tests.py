@@ -23,8 +23,8 @@ def run(directory='.', settings = {}):
     for i in range(1,100):
         try:
             expected_data = []
-            output_file_name = settings['positive_test_mask'].replace('*', '{:02d}'.format(i),1).replace('*', 'out')
-            input_file_name = settings['positive_test_mask'].replace('*', '{:02d}'.format(i),1).replace('*', 'in')
+            output_file_name = settings['positive_test_output_mask'].replace('*', '{:02d}'.format(i))
+            input_file_name = settings['positive_test_input_mask'].replace('*', '{:02d}'.format(i))
             expected_output_file = open(directory + '/' + settings['tests_folder'] + '/' + output_file_name)
             for line in expected_output_file:
                 if settings['strict_string']:
@@ -85,7 +85,7 @@ def run(directory='.', settings = {}):
     tests_passed = True
     for i in range(1,100):
         try:
-            input_file_name = settings['negative_test_mask'].replace('*', '{:02d}'.format(i),1).replace('*', 'in')
+            input_file_name = settings['negative_test_input_mask'].replace('*', '{:02d}'.format(i))
             open(directory + '/' + settings['tests_folder'] + '/' + input_file_name)
             arguments = settings['arguments'].replace('$IN_FILE$', directory + '/' + settings['tests_folder'] + '/' + input_file_name).replace('$OUT_FILE$', 'tmp.txt')
             cmd = '"' + directory + '/' + settings['app_name'] + '" ' + arguments + ' '

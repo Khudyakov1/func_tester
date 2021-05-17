@@ -19,8 +19,10 @@ DEFAULT_SETTINGS = {
     'flags': '-Wall -Werror -Wextra -Wpedantic -Wvla -Wfloat-equal -Wfloat-conversion --coverage -lm',
     'compiler': 'gcc',
     'tests_folder': 'func_tests',
-    'positive_test_mask': 'pos_*_*.txt',
-    'negative_test_mask': 'neg_*_*.txt',
+    'positive_test_input_mask': 'pos_*_in.txt',
+    'positive_test_output_mask': 'pos_*_out.txt',
+    'negative_test_input_mask': 'neg_*_in.txt',
+    'negative_test_output_mask': 'neg_*_out.txt',
     'use_input_file': True,
     'use_output_file': True,
     'arguments': '$IN_FILE$'
